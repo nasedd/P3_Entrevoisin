@@ -1,5 +1,6 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -16,12 +17,9 @@ import butterknife.OnClick;
 public class ListNeighbourActivity extends AppCompatActivity {
 
     // UI Components
-    @BindView(R.id.tabs)
-    TabLayout mTabLayout;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-    @BindView(R.id.container)
-    ViewPager mViewPager;
+    @BindView(R.id.tabs) TabLayout mTabLayout;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.container) ViewPager mViewPager;
 
     ListNeighbourPagerAdapter mPagerAdapter;
 

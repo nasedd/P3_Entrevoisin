@@ -47,9 +47,9 @@ public class NeighbourFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_neighbour_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_neighbour_list, container, false); // viewGroupe = viewPager
         Context context = view.getContext();
-        mRecyclerView = (RecyclerView) view;
+        mRecyclerView = (RecyclerView) view; //pas compris cette ligne
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         return view;
