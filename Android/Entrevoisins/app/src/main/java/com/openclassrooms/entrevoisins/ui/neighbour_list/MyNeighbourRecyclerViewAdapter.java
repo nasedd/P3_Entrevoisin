@@ -2,6 +2,7 @@ package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -60,10 +61,15 @@ public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeigh
         holder.mDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putLong("KEY_ID",neighbour.getId());
                 Intent intent = new Intent(v.getContext(), DetailNeighbourActivity.class);
+                intent.putExtras(bundle);
                 v.getContext().startActivity(intent);
             }
         });
+
+
 
 
     }
