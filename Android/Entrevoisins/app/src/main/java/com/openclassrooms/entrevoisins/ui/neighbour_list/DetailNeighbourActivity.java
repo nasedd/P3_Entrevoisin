@@ -86,6 +86,9 @@ public class DetailNeighbourActivity extends AppCompatActivity {
                     if(!isFavorite && neighbourId == item.getId()){
                         favoriteNeighbours.add(item); //comment testé rapidement si ma list est bien incrémenté
                         binding.favoriteButton.setImageResource(R.drawable.ic_star_yellow);
+                    }else if(isFavorite && neighbourId == item.getId()){
+                        favoriteNeighbours.remove(item);
+                        binding.favoriteButton.setImageResource(R.drawable.ic_star_white);
                     }
                 }
                 String sizeFavoriteList = Integer.toString(favoriteNeighbours.size());
