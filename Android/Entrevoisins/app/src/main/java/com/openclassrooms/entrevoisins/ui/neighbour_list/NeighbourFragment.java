@@ -41,7 +41,7 @@ public class NeighbourFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mApiService = DI.getNeighbourApiService();
+        mApiService = DI.getNeighbourApiService(); //ça renvoie service un truc qui a deja été crée ce n'ai pas une nouvelle instance de class
     }
 
     @Override

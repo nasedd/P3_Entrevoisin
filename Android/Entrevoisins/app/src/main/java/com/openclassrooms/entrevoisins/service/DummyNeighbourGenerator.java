@@ -38,4 +38,6 @@ public abstract class DummyNeighbourGenerator {
     static List<Neighbour> generateNeighbours() {
         return new ArrayList<>(DUMMY_NEIGHBOURS);
     }
+
+    static List<Neighbour> generateFavoriteNeighbours() { return new ArrayList<>(); }
 }

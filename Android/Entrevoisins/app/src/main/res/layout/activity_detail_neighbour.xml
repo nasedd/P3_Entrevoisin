@@ -174,7 +174,7 @@
     </android.support.design.card.MaterialCardView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_action_button"
+        android:id="@+id/favorite_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
@@ -184,7 +184,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/neighbour_photo"
         app:layout_constraintEnd_toEndOf="@+id/material_card_view"
         app:layout_constraintTop_toBottomOf="@+id/neighbour_photo"
-        app:srcCompat="@drawable/ic_star_white_24dp"
+        app:srcCompat="@drawable/ic_star_white"
         android:importantForAccessibility="no"/>
 
 
