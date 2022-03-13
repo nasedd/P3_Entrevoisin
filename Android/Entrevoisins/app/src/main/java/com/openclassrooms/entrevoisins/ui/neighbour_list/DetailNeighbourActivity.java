@@ -2,9 +2,7 @@ package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.openclassrooms.entrevoisins.R;
@@ -14,7 +12,6 @@ import com.openclassrooms.entrevoisins.model.Neighbour;
 import com.openclassrooms.entrevoisins.service.NeighbourApiService;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,12 +19,8 @@ public class DetailNeighbourActivity extends AppCompatActivity {
 
     private NeighbourApiService mApiService;
     private List<Neighbour> mNeighbours;
-    private List<Neighbour> favoriteNeighbours;
+    private List<Neighbour> mFavoriteNeighbours;
     private ActivityDetailNeighbourBinding binding;
-
-
-
-
 
 
     @Override
@@ -43,9 +36,9 @@ public class DetailNeighbourActivity extends AppCompatActivity {
         mNeighbours = mApiService.getNeighbours();
 
         Bundle bundle = getIntent().getExtras();
-        long neighbourId = bundle.getLong("KEY_ID",1);
-        for ( Neighbour item : mNeighbours) {
-            if(neighbourId == item.getId()){
+        long neighbourId = bundle.getLong("KEY_ID", 1);
+        for (Neighbour item : mNeighbours) {
+            if (neighbourId == item.getId()) { //rechercher le neighbour correspondant à l'id dans la list de neighbours
                 binding.neighbourName2.setText(item.getName());
                 binding.neighbourName.setText(item.getName());
                 binding.neighbourAddress.setText(item.getAddress());
@@ -64,54 +57,53 @@ public class DetailNeighbourActivity extends AppCompatActivity {
                 DetailNeighbourActivity.this.finish();
             }
         });
-        favoriteNeighbours = mApiService.getNeighboursFavorite();
+        mFavoriteNeighbours = mApiService.getNeighboursFavorite();
 
         binding.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                boolean isFavorite = false;
-                for (Neighbour item : favoriteNeighbours) {
-                    if(neighbourId == item.getId()){ //verifie si le neighbour est dans la list de favorie
-                        isFavorite = true;
-                    }
+                boolean isFavorite = isNeighbourFavorite(neighbourId);
+
+                if (!isFavorite) {
+                    mFavoriteNeighbours.add(findNeighbour(neighbourId)); //comment testé rapidement si ma list est bien incrémenté ?
+                    binding.favoriteButton.setImageResource(R.drawable.ic_star_yellow);
+                } else if (isFavorite) {
+                    mFavoriteNeighbours.remove(findNeighbour(neighbourId));
+                    binding.favoriteButton.setImageResource(R.drawable.ic_star_white);
                 }
-
-
-                String favoriteState = Boolean.toString(isFavorite);
-                Toast toast2= Toast.makeText(getApplicationContext(),"favorite = " + favoriteState,Toast. LENGTH_SHORT);
-                toast2. show();
-
-                for (Neighbour item : mNeighbours) {
-                    if(!isFavorite && neighbourId == item.getId()){
-                        favoriteNeighbours.add(item); //comment testé rapidement si ma list est bien incrémenté
-                        binding.favoriteButton.setImageResource(R.drawable.ic_star_yellow);
-                    }else if(isFavorite && neighbourId == item.getId()){
-                        favoriteNeighbours.remove(item);
-                        binding.favoriteButton.setImageResource(R.drawable.ic_star_white);
-                    }
-                }
-                String sizeFavoriteList = Integer.toString(favoriteNeighbours.size());
-                Toast toast= Toast.makeText(getApplicationContext(),"size = " + sizeFavoriteList,Toast. LENGTH_SHORT);
-                toast. setMargin(50,50);
-                toast. show();
-
             }
+
+
         });
 
-        for (Neighbour item : favoriteNeighbours) {
-            if(neighbourId == item.getId()){ //verifie si le neighbour est dans la list de favorie
-                binding.favoriteButton.setImageResource(R.drawable.ic_star_yellow);
-            }
+        //Actualiser la couleur de l'étoile quand on ouvre l'activity Detail
+        if (isNeighbourFavorite(neighbourId)) {
+            binding.favoriteButton.setImageResource(R.drawable.ic_star_yellow);
         }
 
-        //
 
+    }
 
+    private boolean isNeighbourFavorite(long neighbourId) {
+        boolean bool = false;
+        for (Neighbour item : mFavoriteNeighbours) {
+            if (neighbourId == item.getId()) { //verifie si le neighbour est dans la list de favorie
+                bool = true;
+                break;
+            }
+        }
+        return bool;
+    }
 
-
-
-
-
+    private Neighbour findNeighbour(long neighbourId) {
+        Neighbour neighbour = new Neighbour(1, "", "", "", "", "");
+        for (Neighbour item : mNeighbours) {
+            if (neighbourId == item.getId()) {
+                neighbour = item;
+                break;
+            }
+        }
+        return neighbour;
     }
 }
