@@ -5,8 +5,13 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.widget.RecyclerView;
 
 import com.openclassrooms.entrevoisins.R;
+import com.openclassrooms.entrevoisins.di.DI;
+import com.openclassrooms.entrevoisins.model.Neighbour;
+import com.openclassrooms.entrevoisins.service.DummyNeighbourApiService;
+import com.openclassrooms.entrevoisins.service.NeighbourApiService;
 import com.openclassrooms.entrevoisins.ui.neighbour_list.ListNeighbourActivity;
 import com.openclassrooms.entrevoisins.utils.DeleteViewAction;
 
@@ -21,8 +26,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.hasMinimumChildCount;
 import static com.openclassrooms.entrevoisins.utils.RecyclerViewItemCountAssertion.withItemCount;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-
+import java.util.List;
 
 /**
  * Test class for list of neighbours
@@ -68,4 +76,39 @@ public class NeighboursListTest {
         // Then : the number of element is 11
         onView(ViewMatchers.withId(R.id.list_neighbours)).check(withItemCount(ITEMS_COUNT-1));
     }
+
+    @Test
+    public void neighbourClick_shouldLaunch_DetailActivity(){
+        onView(ViewMatchers.withId(R.id.list_neighbours)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0,click()));
+
+        onView(ViewMatchers.withId((R.id.activity_detail_container)))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void detailActivity_shouldDisplay_theRightName(){
+        onView(ViewMatchers.withId(R.id.list_neighbours)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(1,click())); //nb aléatoir à la place de 1 ?
+
+        String name = DI.getNewInstanceApiService().getNeighbours().get(1).getName();
+
+        onView(ViewMatchers.withId((R.id.neighbour_name)))
+                .check(matches(withText(name)));
+
+    }
+
+    @Test
+    public void favorites_tab_shouldDisplay_onlyFavoriteNeighbours(){
+        onView(ViewMatchers.withId(R.id.list_neighbours)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(1,click()));
+        onView(ViewMatchers.withId(R.id.favorite_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.back_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.list_favorite)).check(withItemCount(1));
+
+    }
+
+
+
+
 }

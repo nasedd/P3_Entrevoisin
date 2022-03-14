@@ -22,7 +22,7 @@ public class FavoriteFragment extends Fragment {
 
     private NeighbourApiService mApiService;
     private List<Neighbour> mFavoriteNeighbours;
-    public RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
 
 
     /**

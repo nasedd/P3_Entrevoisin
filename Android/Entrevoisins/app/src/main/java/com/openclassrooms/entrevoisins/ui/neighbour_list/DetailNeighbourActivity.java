@@ -1,8 +1,11 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
 import android.os.Bundle;
+import android.support.annotation.LongDef;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.openclassrooms.entrevoisins.R;
@@ -21,6 +24,7 @@ public class DetailNeighbourActivity extends AppCompatActivity {
     private List<Neighbour> mNeighbours;
     private List<Neighbour> mFavoriteNeighbours;
     private ActivityDetailNeighbourBinding binding;
+    //private static final String TAG = "MainActivity";
 
 
     @Override
@@ -29,7 +33,6 @@ public class DetailNeighbourActivity extends AppCompatActivity {
         binding = ActivityDetailNeighbourBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        //setContentView(R.layout.activity_detail_neighbour);
 
         mApiService = DI.getNeighbourApiService(); // à ce que j'ai crompris ça ne crée pas une nouvelle instance de class ?
         //c'est comme une instance de class globale ?
@@ -59,6 +62,7 @@ public class DetailNeighbourActivity extends AppCompatActivity {
         });
         mFavoriteNeighbours = mApiService.getNeighboursFavorite();
 
+
         binding.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +76,9 @@ public class DetailNeighbourActivity extends AppCompatActivity {
                     mFavoriteNeighbours.remove(findNeighbour(neighbourId));
                     binding.favoriteButton.setImageResource(R.drawable.ic_star_white);
                 }
+                //Toast.makeText(v.getContext(), "Correct!", Toast.LENGTH_SHORT).show();
+
+
             }
 
 

@@ -56,7 +56,7 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
             }
         });
 
-        holder.mDetail.setOnClickListener(new View.OnClickListener() { // pourquoi mettre un m en prefixe ?
+        holder.mDetail.setOnClickListener(new View.OnClickListener() { // pourquoi mettre un m en prefixe ? = m pour member attribut de class
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
