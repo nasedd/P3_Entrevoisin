@@ -106,7 +106,7 @@ public class NeighboursListTest {
 
         //check the initial value of the two lists :
         onView(ViewMatchers.withId(R.id.list_favorite)).check(withItemCount(FAVORITE_ITEMS_COUNT));
-        onView(ViewMatchers.withId(R.id.list_favorite)).check(withItemCount(ITEMS_COUNT));
+        onView(ViewMatchers.withId(R.id.list_neighbours)).check(withItemCount(ITEMS_COUNT));
 
         // perform click :
         onView(ViewMatchers.withId(R.id.list_neighbours)).perform(
