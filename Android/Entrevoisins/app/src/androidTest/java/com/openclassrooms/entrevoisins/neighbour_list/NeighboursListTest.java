@@ -86,13 +86,13 @@ public class NeighboursListTest {
         onView(ViewMatchers.withId((R.id.activity_detail_container)))
                 .check(matches(isDisplayed()));
 
-        //verifier que c'est le bon intent autre solution
+        //autre solution : verifier que c'est le bon intent
     }
 
     @Test
     public void detailActivity_shouldDisplay_theRightName(){
         onView(ViewMatchers.withId(R.id.list_neighbours)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(1,click())); //nb aléatoir à la place de 1 ?
+                RecyclerViewActions.actionOnItemAtPosition(1,click()));
 
         String name = DI.getNewInstanceApiService().getNeighbours().get(1).getName();
 
