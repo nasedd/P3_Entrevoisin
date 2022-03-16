@@ -1,9 +1,7 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
 import android.os.Bundle;
-import android.support.annotation.LongDef;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,7 +19,6 @@ import java.util.List;
 public class DetailNeighbourActivity extends AppCompatActivity {
 
     private NeighbourApiService mApiService;
-    private List<Neighbour> mNeighbours;
     private List<Neighbour> mFavoriteNeighbours;
     private ActivityDetailNeighbourBinding binding;
     //private static final String TAG = "MainActivity";
@@ -34,25 +31,41 @@ public class DetailNeighbourActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        mApiService = DI.getNeighbourApiService(); // à ce que j'ai crompris ça ne crée pas une nouvelle instance de class ?
-        //c'est comme une instance de class globale ?
-        mNeighbours = mApiService.getNeighbours();
+        mApiService = DI.getNeighbourApiService();
+        // favorite list :
+        mFavoriteNeighbours = mApiService.getNeighboursFavorite();
 
+        // get the bundle back :
         Bundle bundle = getIntent().getExtras();
-        long neighbourId = bundle.getLong("KEY_ID", 1);
-        for (Neighbour item : mNeighbours) {
-            if (neighbourId == item.getId()) { //rechercher le neighbour correspondant à l'id dans la list de neighbours
-                binding.neighbourName2.setText(item.getName());
-                binding.neighbourName.setText(item.getName());
-                binding.neighbourAddress.setText(item.getAddress());
-                binding.neighbourPhone.setText(item.getPhoneNumber());
-                binding.neighbourFacebook.setText(getResources().getString(R.string.facebook_url, item.getName()));
-                binding.neighbourDescription.setText(item.getAboutMe());
-                Glide.with(binding.neighbourPhoto.getContext()) //affichage d'image à ddl et l'affiche dès qu'elle est prête
-                        .load(item.getAvatarUrl())
-                        .into(binding.neighbourPhoto);
-            }
+        Neighbour neighbour = (Neighbour)bundle.getSerializable("KEY");
+
+        if(neighbour != null){
+            binding.neighbourName2.setText(neighbour.getName());
+            binding.neighbourName.setText(neighbour.getName());
+            binding.neighbourAddress.setText(neighbour.getAddress());
+            binding.neighbourPhone.setText(neighbour.getPhoneNumber());
+            binding.neighbourFacebook.setText(getResources().getString(R.string.facebook_url, neighbour.getName()));
+            binding.neighbourDescription.setText(neighbour.getAboutMe());
+            Glide.with(binding.neighbourPhoto.getContext()) //affichage d'image à ddl et l'affiche dès qu'elle est prête
+                    .load(neighbour.getAvatarUrl())
+                    .into(binding.neighbourPhoto);
         }
+
+        binding.favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                boolean isFavorite = isFavorite(neighbour);
+
+                if (!isFavorite) {
+                    mApiService.addFavorite(neighbour);
+                    binding.favoriteButton.setImageResource(R.drawable.ic_star_yellow);
+                } else if (isFavorite) {
+                    mApiService.deleteFavorite(neighbour);
+                    binding.favoriteButton.setImageResource(R.drawable.ic_star_white);
+                }
+            }
+        });
 
         binding.backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,57 +73,20 @@ public class DetailNeighbourActivity extends AppCompatActivity {
                 DetailNeighbourActivity.this.finish();
             }
         });
-        mFavoriteNeighbours = mApiService.getNeighboursFavorite();
 
-
-        binding.favoriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                boolean isFavorite = isNeighbourFavorite(neighbourId);
-
-                if (!isFavorite) {
-                    mFavoriteNeighbours.add(findNeighbour(neighbourId)); //comment testé rapidement si ma list est bien incrémenté ?
-                    binding.favoriteButton.setImageResource(R.drawable.ic_star_yellow);
-                } else if (isFavorite) {
-                    mFavoriteNeighbours.remove(findNeighbour(neighbourId));
-                    binding.favoriteButton.setImageResource(R.drawable.ic_star_white);
-                }
-                //Toast.makeText(v.getContext(), "Correct!", Toast.LENGTH_SHORT).show();
-
-
-            }
-
-
-        });
-
-        //Actualiser la couleur de l'étoile quand on ouvre l'activity Detail
-        if (isNeighbourFavorite(neighbourId)) {
+        //Update star color after opening activity
+        if (isFavorite(neighbour)) {
             binding.favoriteButton.setImageResource(R.drawable.ic_star_yellow);
         }
 
-
     }
 
-    private boolean isNeighbourFavorite(long neighbourId) {
-        boolean bool = false;
+    private boolean isFavorite(Neighbour neighbour) {
         for (Neighbour item : mFavoriteNeighbours) {
-            if (neighbourId == item.getId()) { //verifie si le neighbour est dans la list de favorie
-                bool = true;
-                break;
+            if (neighbour.equals(item)) {
+                return true;
             }
         }
-        return bool;
-    }
-
-    private Neighbour findNeighbour(long neighbourId) {
-        Neighbour neighbour = new Neighbour(1, "", "", "", "", "");
-        for (Neighbour item : mNeighbours) {
-            if (neighbourId == item.getId()) {
-                neighbour = item;
-                break;
-            }
-        }
-        return neighbour;
+        return false;
     }
 }

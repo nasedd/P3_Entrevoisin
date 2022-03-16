@@ -39,7 +39,8 @@ import java.util.List;
 public class NeighboursListTest {
 
     // This is fixed
-    private static int ITEMS_COUNT = 12;
+    private static final int ITEMS_COUNT = 12;
+    private static final int FAVORITE_ITEMS_COUNT = 0;
 
     private ListNeighbourActivity mActivity;
 
@@ -84,6 +85,8 @@ public class NeighboursListTest {
 
         onView(ViewMatchers.withId((R.id.activity_detail_container)))
                 .check(matches(isDisplayed()));
+
+        //verifier que c'est le bon intent autre solution
     }
 
     @Test
@@ -99,12 +102,23 @@ public class NeighboursListTest {
     }
 
     @Test
-    public void favorites_tab_shouldDisplay_onlyFavoriteNeighbours(){
+    public void favoritesTab_shouldDisplay_onlyFavoriteNeighbours(){
+
+        //check the initial value of the two lists :
+        onView(ViewMatchers.withId(R.id.list_favorite)).check(withItemCount(FAVORITE_ITEMS_COUNT));
+        onView(ViewMatchers.withId(R.id.list_favorite)).check(withItemCount(ITEMS_COUNT));
+
+        // perform click :
         onView(ViewMatchers.withId(R.id.list_neighbours)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(1,click()));
         onView(ViewMatchers.withId(R.id.favorite_button)).perform(click());
         onView(ViewMatchers.withId(R.id.back_button)).perform(click());
-        onView(ViewMatchers.withId(R.id.list_favorite)).check(withItemCount(1));
+
+        //check that favorite list has incremented:
+        onView(ViewMatchers.withId(R.id.list_favorite)).check(withItemCount(FAVORITE_ITEMS_COUNT+1));
+
+        // check that neighbour list has not incremented :
+        onView(ViewMatchers.withId(R.id.list_neighbours)).check(withItemCount(ITEMS_COUNT));
 
     }
 

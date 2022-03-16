@@ -10,30 +10,28 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.openclassrooms.entrevoisins.R;
-import com.openclassrooms.entrevoisins.events.DeleteNeighbourEvent;
+import com.openclassrooms.entrevoisins.di.DI;
 import com.openclassrooms.entrevoisins.model.Neighbour;
-
-import org.greenrobot.eventbus.EventBus;
+import com.openclassrooms.entrevoisins.service.NeighbourApiService;
 
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRecyclerViewAdapter.ViewHolder> {
 
     private final List<Neighbour> mFavoriteNeighbours;
+    private NeighbourApiService mApiService;
 
     public FavoriteRecyclerViewAdapter(List<Neighbour> items) {
         mFavoriteNeighbours = items;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) { // le viewgroup est le recyclerView
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) { //le viewgroup est le recyclerView
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_favorite, parent, false);
         return new ViewHolder(view);
@@ -48,28 +46,26 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.mNeighbourAvatar);
 
+
         holder.mStarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFavoriteNeighbours.remove(neighbour);
+                mApiService = DI.getNeighbourApiService();
+                mApiService.deleteFavorite(neighbour);
                 notifyItemRemoved(holder.getAdapterPosition());
             }
         });
 
-        holder.mDetail.setOnClickListener(new View.OnClickListener() { // pourquoi mettre un m en prefixe ? = m pour member attribut de class
+        holder.mDetail.setOnClickListener(new View.OnClickListener() { //pourquoi mettre un m en prefixe ? = m pour member attribut de class
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putLong("KEY_ID",neighbour.getId());
+                bundle.putSerializable("KEY",neighbour);
                 Intent intent = new Intent(v.getContext(), DetailNeighbourActivity.class);
                 intent.putExtras(bundle);
                 v.getContext().startActivity(intent);
             }
         });
-
-
-
-
     }
 
     @Override

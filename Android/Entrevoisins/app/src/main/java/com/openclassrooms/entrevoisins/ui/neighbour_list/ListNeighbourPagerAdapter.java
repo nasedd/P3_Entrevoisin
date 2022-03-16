@@ -20,17 +20,9 @@ public class ListNeighbourPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        Fragment fragment = FavoriteFragment.newInstance();;
+        if(position == 0) return NeighbourFragment.newInstance();
 
-        switch (position){
-                case 0:
-                    fragment =  NeighbourFragment.newInstance();
-                     break;
-                case 1:
-                    fragment =  FavoriteFragment.newInstance();
-                    break;
-        }
-        return fragment; // might not have been initialized si je ne l'initialise pas avant le switch. y a t il une autre solution ?
+        return FavoriteFragment.newInstance();
     }
 
     /**

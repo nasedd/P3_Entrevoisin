@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.openclassrooms.entrevoisins.R;
 import com.openclassrooms.entrevoisins.di.DI;
@@ -30,22 +31,21 @@ public class FavoriteFragment extends Fragment {
      * @return @{@link FavoriteFragment}
      */
     public static FavoriteFragment newInstance() {
-        FavoriteFragment fragment = new FavoriteFragment();
-        return fragment;
+        return new FavoriteFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mApiService = DI.getNeighbourApiService(); //ça renvoie service un truc qui a deja été crée ce n'ai pas une nouvelle instance de class
+        mApiService = DI.getNeighbourApiService();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_favorite_list, container, false); // viewGroupe = viewPager
+        View view = inflater.inflate(R.layout.fragment_favorite_list, container, false);
         Context context = view.getContext();
-        mRecyclerView = (RecyclerView) view; //pas compris cette ligne
+        mRecyclerView = (RecyclerView) view; //pas compris cette ligne__________________________________________________________________
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         return view;
@@ -62,28 +62,25 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Toast.makeText(this.getContext(), "init", Toast.LENGTH_SHORT).show();
+
         initList();
-    }
-    /*
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        initList();
     }
 
-    /**
-     * Fired if the user clicks on a delete button
-     * @param event
-     */
-    /*@Subscribe
-    public void onDeleteNeighbour(DeleteNeighbourEvent event) {
-        mApiService.deleteNeighbour(event.neighbour);
-        initList();
-    }*/
+
+    //After Delete neighbour and going to Favorites Tab, the list is well updated cause of :
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            Toast.makeText(this.getContext(), "init", Toast.LENGTH_SHORT).show();
+            initList();
+        }
+    }
 }

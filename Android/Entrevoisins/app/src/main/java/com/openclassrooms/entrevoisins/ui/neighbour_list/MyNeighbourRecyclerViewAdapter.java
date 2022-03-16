@@ -55,14 +55,15 @@ public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeigh
             @Override
             public void onClick(View v) {
                 EventBus.getDefault().post(new DeleteNeighbourEvent(neighbour));
+                notifyItemRemoved(holder.getAdapterPosition());
             }
         });
 
-        holder.mDetail.setOnClickListener(new View.OnClickListener() { // pourquoi mettre un m en prefixe ?
+        holder.mDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putLong("KEY_ID",neighbour.getId());
+                bundle.putSerializable("KEY",neighbour);
                 Intent intent = new Intent(v.getContext(), DetailNeighbourActivity.class);
                 intent.putExtras(bundle);
                 v.getContext().startActivity(intent);

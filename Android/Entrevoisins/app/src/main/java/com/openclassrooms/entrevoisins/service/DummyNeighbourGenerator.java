@@ -39,5 +39,7 @@ public abstract class DummyNeighbourGenerator {
         return new ArrayList<>(DUMMY_NEIGHBOURS);
     }
 
-    static List<Neighbour> generateFavoriteNeighbours() { return new ArrayList<>(); }
+    public static List<Neighbour> DUMMY_FAVORITES = new ArrayList<>();
+
+    static List<Neighbour> generateFavoriteNeighbours() { return new ArrayList<>(DUMMY_FAVORITES); } //return DUMMY_FAVORITES NE FONCTIONNE PAS !!!
 }
